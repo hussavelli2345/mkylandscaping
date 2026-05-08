@@ -639,14 +639,15 @@
       padding: 6rem 2rem 2rem;
       gap: 0;
       z-index: 200;
-      transform: translateX(100%);
+      transform: translateX(110%);
       transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
+      -webkit-overflow-scrolling: touch;
+      visibility: hidden;
       box-shadow: -4px 0 24px rgba(0,0,0,0.5);
     }
     .nav-center.open {
       transform: translateX(0);
-      pointer-events: all;
+      visibility: visible;
     }
     .nav-center li {
       border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -974,18 +975,32 @@
     document.getElementById('navLinks').classList.add('open');
     document.getElementById('navOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
   }
   function closeMenu() {
     document.getElementById('navLinks').classList.remove('open');
     document.getElementById('navOverlay').classList.remove('open');
     document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
   }
   function toggleMenu() {
     const isOpen = document.getElementById('navLinks').classList.contains('open');
     isOpen ? closeMenu() : openMenu();
   }
+  // Add both click and touchend for iOS
+  document.getElementById('burger').addEventListener('touchend', function(e) {
+    e.preventDefault();
+    toggleMenu();
+  });
+  document.getElementById('navOverlay').addEventListener('touchend', function(e) {
+    e.preventDefault();
+    closeMenu();
+  });
   document.querySelectorAll('#navLinks a').forEach(a => {
     a.addEventListener('click', () => closeMenu());
+    a.addEventListener('touchend', () => closeMenu());
   });
 
   // Hero slideshow
